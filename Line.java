@@ -8,6 +8,6 @@ class Line {
     Line(boolean isComment, GCodeCommand command, ArrayList<String> cmdParams) {
         comment = isComment;
         cmd = command;
-        cmdParams = params;
+        params = cmdParams;
     }
 }

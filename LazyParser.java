@@ -25,7 +25,6 @@ class LazyParser {
         boolean lineIsComment;
         Line nextLine;
         GCodeCommand cmd;
-        int start;
         while (scanner.hasNextLine()) {
             nextLineStr = scanner.nextLine();
             if (!nextLineStr.trim().isEmpty()) {
@@ -33,13 +32,12 @@ class LazyParser {
                 words = nextLineStr.split("[\\s]");
                 if (lineIsComment) {
                     cmd = null;
-                    start = 0;
                 } else {
                     cmd = new GCodeCommand(words[0]);
-                    start = 1;
                 }
                 nextLine = new Line(lineIsComment, cmd, 
-                new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(words, start, words.length))));
+                // Always skip first word in string bc it is either command or ";"
+                new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(words, 1, words.length))));
                 lines.add(nextLine);
             }
         }
