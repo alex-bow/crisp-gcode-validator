@@ -9,6 +9,7 @@ class LazyParser {
     ArrayList<Line> lines;
 
     LazyParser(File file) {
+        lines = new ArrayList<Line>();
         try {
             scanner = new Scanner(file);
         } catch (IOException e) {
@@ -39,7 +40,10 @@ class LazyParser {
                 }
                 nextLine = new Line(lineIsComment, cmd, 
                 new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(words, start, words.length))));
+                lines.add(nextLine);
             }
         }
     }
+
+    
 }
