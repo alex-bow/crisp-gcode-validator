@@ -46,6 +46,14 @@ class LibraryValidator extends Validator {
             if (!cmtWords.get(2).equals("PLA")) {
                 return StatusType.HARD_FAIL_FILAMENT_TYPE;
             }
+        } else if (cmtWords.get(0).equals("printer_model")) {
+            if (!cmtWords.get(2).equals("MK3S")) {
+                return StatusType.HARD_FAIL_PRINTER_TYPE;
+            }
+        } else if (cmtWords.get(0).equals("printer_settings_id")) {
+            if (!cmtWords.get(2).equals("Prusa i3 MK3S (Marriott Library)")) {
+                return StatusType.HARD_FAIL_NO_PROFILE;
+            }
         }
         return null;
     }
