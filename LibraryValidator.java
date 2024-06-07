@@ -34,28 +34,14 @@ class LibraryValidator extends Validator {
     StatusType check_prusa_comments(ArrayList<String> cmtWords) {
         Matcher m;
         int hours;
-        String cmtName = "";
-        String cmtParam = "";
+        String cmtName;
+        String cmtParam;
 
-        boolean isAfterEquals = false;
+        if (cmtWords.contains("=")) {
+            String[] reconstructed = reconstructCmt(cmtWords);
+            cmtName = reconstructed[0];
+            cmtParam = reconstructed[1];
 
-        // this is horrible
-        for (int i = 0; i < cmtWords.size(); i ++) {
-            if (cmtWords.get(i).equals("=")) {
-                isAfterEquals = true;
-            } else if (isAfterEquals) {
-                cmtParam += cmtWords.get(i);
-                if (i < cmtWords.size() - 1) {
-                    cmtParam += " ";
-                }
-            } else {
-                cmtName += cmtWords.get(i);
-                if (i < cmtWords.indexOf("=") - 1) {
-                    cmtName += " ";
-                }
-            }
-        }
-        if (isAfterEquals) { 
             // System.out.println("Attempting to parse " + cmtName + " = " + cmtParam);
             if (cmtName.equals("fill_density")) {
                 int i;
@@ -91,6 +77,31 @@ class LibraryValidator extends Validator {
 
             }
         }
+        
         return null;
+    }
+
+    // Slightly less horrible but very naive reconstruction
+    String[] reconstructCmt(ArrayList<String> cmtWords) {
+        boolean isAfterEquals = false;
+        String cmtName = "";
+        String cmtParam = "";
+
+        for (int i = 0; i < cmtWords.size(); i ++) {
+            if (cmtWords.get(i).equals("=")) {
+                isAfterEquals = true;
+            } else if (isAfterEquals) {
+                cmtParam += cmtWords.get(i);
+                if (i < cmtWords.size() - 1) {
+                    cmtParam += " ";
+                }
+            } else {
+                cmtName += cmtWords.get(i);
+                if (i < cmtWords.indexOf("=") - 1) {
+                    cmtName += " ";
+                }
+            }
+        }
+        return new String[]{cmtName, cmtParam};
     }
 }
