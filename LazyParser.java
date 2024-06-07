@@ -7,9 +7,16 @@ import java.util.Arrays;
 class LazyParser {
     Scanner scanner;
     ArrayList<Line> lines;
+    ArrayList<ParserModule> parserModules;
 
     LazyParser(File file) {
         lines = new ArrayList<Line>();
+        parserModules = new ArrayList<ParserModule>();
+        
+        // set up desired parser modules
+        ParserModule toolpath = new ToolpathParser();
+        parserModules.add(toolpath);
+
         try {
             scanner = new Scanner(file);
         } catch (IOException e) {
@@ -39,6 +46,11 @@ class LazyParser {
                 // Always skip first word in string bc it is either command or ";"
                 new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(words, 1, words.length))));
                 lines.add(nextLine);
+                ParserModule currentModule;
+                for (int i = 0; i < parserModules.size(); i++) {
+                    currentModule = parserModules.get(i);
+                    currentModule.parseLine(nextLine);
+                }
             }
         }
     }
