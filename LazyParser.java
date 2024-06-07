@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+// Transforms a GCode file into a structure of lines
 class LazyParser {
     Scanner scanner;
     ArrayList<Line> lines;

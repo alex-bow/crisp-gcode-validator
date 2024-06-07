@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
+// Performs validation from a list of validation modules, when given those modules + a parser
 class ValidationBox {
     LazyParser parser;
     ArrayList<Validator> validators;

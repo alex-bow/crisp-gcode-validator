@@ -1,3 +1,5 @@
+// usage after compiling: java Demo path/to/file.gcode
+
 import java.io.File;
 import java.util.ArrayList;
 
