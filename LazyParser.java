@@ -10,12 +10,12 @@ class LazyParser {
     ArrayList<ParserModule> parserModules;
 
     LazyParser(File file) {
+        this(file, new ArrayList<ParserModule>());
+    }
+
+    LazyParser(File file, ArrayList<ParserModule> pms) {
         lines = new ArrayList<Line>();
-        parserModules = new ArrayList<ParserModule>();
-        
-        // set up desired parser modules
-        ParserModule toolpath = new ToolpathParser();
-        parserModules.add(toolpath);
+        parserModules = pms;
 
         try {
             scanner = new Scanner(file);
