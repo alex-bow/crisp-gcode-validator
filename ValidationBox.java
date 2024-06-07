@@ -24,7 +24,6 @@ class ValidationBox {
     }
 
     void debug_display_statuses() {
-        System.out.println(statuses);
 
         String msg = "";
         boolean failIsSoft;

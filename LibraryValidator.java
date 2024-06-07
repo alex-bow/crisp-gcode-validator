@@ -40,7 +40,6 @@ class LibraryValidator extends Validator {
         boolean isAfterEquals = false;
 
         // this is horrible
-        System.out.println(cmtWords);
         for (int i = 0; i < cmtWords.size(); i ++) {
             if (cmtWords.get(i).equals("=")) {
                 isAfterEquals = true;
@@ -56,10 +55,8 @@ class LibraryValidator extends Validator {
                 }
             }
         }
-        System.out.println("name " + cmtName);
-        System.out.println("param " + cmtParam);
         if (isAfterEquals) { 
-            System.out.println("Attempting to parse " + cmtName + " = " + cmtParam);
+            // System.out.println("Attempting to parse " + cmtName + " = " + cmtParam);
             if (cmtName.equals("fill_density")) {
                 int i;
                 try {
@@ -80,16 +77,13 @@ class LibraryValidator extends Validator {
                     return StatusType.HARD_FAIL_PRINTER_TYPE;
                 }
             } else if (cmtName.equals("printer_settings_id")) {
-                System.out.println(cmtWords);
                 if (!cmtParam.equals("Prusa i3 MK3S (Marriott Library)")) {
                     return StatusType.HARD_FAIL_NO_PROFILE;
                 }
             } else if (cmtName.equals("estimated printing time (normal mode)")) {
-                System.out.println(cmtWords);
                 m = timeStamp.matcher(cmtParam);
                 if (m.find()) {
-                    hours = Integer.parseInt(m.group(0));
-                    System.out.println("I think this print will take " + hours + " from " + m);
+                    hours = Integer.parseInt(m.group(1));
                     if (hours > 6) {
                         return StatusType.SOFT_FAIL_HUGE_PRINT;
                     }
