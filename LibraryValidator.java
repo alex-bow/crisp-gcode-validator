@@ -57,10 +57,12 @@ class LibraryValidator extends Validator {
                 return StatusType.HARD_FAIL_PRINTER_TYPE;
             }
         } else if (cmtWords.get(0).equals("printer_settings_id")) {
+            System.out.println(cmtWords);
             if (!cmtWords.get(2).equals("Prusa i3 MK3S (Marriott Library)")) {
                 return StatusType.HARD_FAIL_NO_PROFILE;
             }
         } else if (cmtWords.get(0).equals("estimated printing time (normal mode)")) {
+            System.out.println(cmtWords);
             m = timeStamp.matcher(cmtWords.get(2));
             if (m.find()) {
                 hours = Integer.parseInt(m.group(0));

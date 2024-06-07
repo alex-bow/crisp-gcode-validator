@@ -36,7 +36,7 @@ class LazyParser {
             nextLineStr = scanner.nextLine();
             if (!nextLineStr.trim().isEmpty()) {
                 lineIsComment = (nextLineStr.substring(0,1).equals(";"));
-                words = nextLineStr.split("[\\s]");
+                words = nextLineStr.split("[\\s=\\s]");
                 if (lineIsComment) {
                     cmd = null;
                 } else {

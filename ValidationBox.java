@@ -36,14 +36,14 @@ class ValidationBox {
             }
             // REPLACE - make modifiable (JSON?)
             switch (s) {
-                case StatusType.SUCCESS: msg = "No issues found in gcode!";
-                case StatusType.HARD_FAIL_PRINTER_TYPE: msg = "This was not sliced for a Prusa Mk3 printer.";
-                case StatusType.HARD_FAIL_PROFILE_VERSION: msg = "Your profiles are out of date; please download the latest profiles from the Library website.";
-                case StatusType.HARD_FAIL_FILAMENT_TYPE: msg = "This was sliced for a filament other than PLA.";
-                case StatusType.HARD_FAIL_NO_PROFILE: msg = "This was not sliced using our profiles; please download the latest profiles from the Library website.";
-                case StatusType.SOFT_FAIL_HIGH_INFILL: msg = "Your infill percentage is very high.";
-                case StatusType.SOFT_FAIL_SUPPORT_TYPE: msg = "You are using a non-recommended support type.";
-                case StatusType.SOFT_FAIL_HUGE_PRINT: msg = "Your print is very large (more than 6h or X grams of filament).";
+                case SUCCESS: msg = "No issues found in gcode!";
+                case HARD_FAIL_PRINTER_TYPE: msg = "This was not sliced for a Prusa Mk3 printer.";
+                case HARD_FAIL_PROFILE_VERSION: msg = "Your profiles are out of date; please download the latest profiles from the Library website.";
+                case HARD_FAIL_FILAMENT_TYPE: msg = "This was sliced for a filament other than PLA.";
+                case HARD_FAIL_NO_PROFILE: msg = "This was not sliced using our profiles; please download the latest profiles from the Library website.";
+                case SOFT_FAIL_HIGH_INFILL: msg = "Your infill percentage is very high.";
+                case SOFT_FAIL_SUPPORT_TYPE: msg = "You are using a non-recommended support type.";
+                case SOFT_FAIL_HUGE_PRINT: msg = "Your print is very large (more than 6h or X grams of filament).";
             }
             if (failIsSoft) {
                 msg = "Warning! " + msg + " This print has been designated for manual review.";
