@@ -64,6 +64,18 @@ class LazyParser {
                 currentToken = PrinterGCodeToken.G_CMD;
             } else if (c == 'M') {
                 currentToken = PrinterGCodeToken.M_CMD;
+            } else if (c == 'X') {
+                currentToken = PrinterGCodeToken.X_PM;
+            } else if (c == 'Y') {
+                currentToken = PrinterGCodeToken.Y_PM;
+            } else if (c == 'Z') {
+                currentToken = PrinterGCodeToken.Z_PM;
+            } else if (c == 'I') {
+                currentToken = PrinterGCodeToken.I_PM;
+            } else if (c == 'J') {
+                currentToken = PrinterGCodeToken.J_PM;
+            } else if (c == 'R') {
+                currentToken = PrinterGCodeToken.R_PM;
             } else if (c == ' ') {
                 tokens.add(new Token(currentToken, currentIdx, currentValue, ln));
 
