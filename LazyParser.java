@@ -45,16 +45,32 @@ class LazyParser {
         for (int lineNum = 1; scanner.hasNextLine(); lineNum++) {
             nextLineStr = scanner.nextLine().trim();
             if (!nextLineStr.isEmpty()) {
-                tokenizeLine(nextLineStr);
+                tokenizeLine(nextLineStr, lineNum);
             }
         }
+        System.out.println(tokens);
     }
 
-    void tokenizeLine(String line) {
+    void tokenizeLine(String line, int ln) {
         pos = 0;
         char c;
+        TokenBase currentToken = null;
+        int currentIdx = 0;
+        double currentValue = 0.0;
+
         while (pos < line.length()) {
             c = advance(line);
+            if (c == 'G') {
+                currentToken = PrinterGCodeToken.G_CMD;
+            } else if (c == 'M') {
+                currentToken = PrinterGCodeToken.M_CMD;
+            } else if (c == ' ') {
+                tokens.add(new Token(currentToken, currentIdx, currentValue, ln));
+
+                currentToken = null;
+                currentIdx = 0;
+                currentValue = 0.0;
+            }
         }
     }
 

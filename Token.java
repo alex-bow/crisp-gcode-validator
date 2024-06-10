@@ -10,4 +10,8 @@ class Token {
         this.value = value; 
         this.line = line;
     }
+
+    public String toString() {
+        return "(" + type + " " + idx + " " + value + " " + line + ")";
+    }
 }
