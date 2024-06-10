@@ -10,9 +10,13 @@ class LazyParser {
     Scanner scanner;
     ArrayList<Line> lines;
     ArrayList<ParserModule> parserModules;
+    ArrayList<TokenizerModule> tokenizerModules;
 
     private ArrayList<Token> tokens;
     int pos;
+    String currentLine;
+
+    public int lineNum;
 
     LazyParser(File file) {
         this(file, new ArrayList<ParserModule>());
@@ -21,6 +25,11 @@ class LazyParser {
     LazyParser(File file, ArrayList<ParserModule> pms) {
         lines = new ArrayList<Line>();
         tokens = new ArrayList<Token>();
+
+        tokenizerModules = new ArrayList<TokenizerModule>();
+        tokenizerModules.add(new PrinterGCodeTokenizer(this));
+        tokenizerModules.add(new PrusaCommentTokenizer(this));
+
         pos = 0;
         parserModules = pms;
 
@@ -42,53 +51,66 @@ class LazyParser {
         // scanTokens
         String nextLineStr;
 
-        for (int lineNum = 1; scanner.hasNextLine(); lineNum++) {
+        for (lineNum = 1; scanner.hasNextLine(); lineNum++) {
             nextLineStr = scanner.nextLine().trim();
             if (!nextLineStr.isEmpty()) {
                 tokenizeLine(nextLineStr, lineNum);
             }
         }
-        System.out.println(tokens);
     }
 
     void tokenizeLine(String line, int ln) {
+        currentLine = line;
         pos = 0;
+
         char c;
         TokenBase currentToken = null;
         int currentIdx = 0;
         double currentValue = 0.0;
 
-        while (pos < line.length()) {
-            c = advance(line);
-            if (c == 'G') {
-                currentToken = PrinterGCodeToken.G_CMD;
-            } else if (c == 'M') {
-                currentToken = PrinterGCodeToken.M_CMD;
-            } else if (c == 'X') {
-                currentToken = PrinterGCodeToken.X_PM;
-            } else if (c == 'Y') {
-                currentToken = PrinterGCodeToken.Y_PM;
-            } else if (c == 'Z') {
-                currentToken = PrinterGCodeToken.Z_PM;
-            } else if (c == 'I') {
-                currentToken = PrinterGCodeToken.I_PM;
-            } else if (c == 'J') {
-                currentToken = PrinterGCodeToken.J_PM;
-            } else if (c == 'R') {
-                currentToken = PrinterGCodeToken.R_PM;
-            } else if (c == ' ') {
-                tokens.add(new Token(currentToken, currentIdx, currentValue, ln));
-
-                currentToken = null;
-                currentIdx = 0;
-                currentValue = 0.0;
+        while (pos < line.length() - 1) {
+            c = advance();
+            for (TokenizerModule module : tokenizerModules) {
+                if(module.caresAbout(c)) {
+                    //System.out.println(line);
+                    //System.out.println(module + " has taken an interest in " + c);
+                    module.tokenize(c); 
+                    // Tokenize will hold the loop until module creates a complete token
+                }
             }
         }
     }
 
-    char advance(String line) {
-        return line.charAt(pos++);
+    // far - the # of chars to peek ahead.
+    public char peek(int far) {
+        return peek(currentLine, far);
     }
 
-    
+    private char peek(String line, int far) {
+        if (pos + far < line.length() - 1) {  
+            return line.charAt(pos + far);
+        } else {
+            return '\0';
+        }
+    }
+
+    public void addToken(Token token) {
+        tokens.add(token);
+    }
+
+    public char advance() {
+        return advance(currentLine);
+    }
+
+    private char advance(String line) {
+        if (pos < line.length() - 1) {  
+            return line.charAt(pos++);
+        } else {
+            return '\0';
+        }
+    }
+
+    public void jump(int i) {
+        pos += i;
+    }
 }
