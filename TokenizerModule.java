@@ -1,7 +1,8 @@
 class TokenizerModule {
     LazyParser parser;
 
-    protected static int LOOKAHEAD_MAX = 2;
+    // This is not great, might slow performance, but handles decimals
+    protected static int LOOKAHEAD_MAX = 8; 
 
     // Perhaps this is not an appropriate use of public
     TokenizerModule(LazyParser parser) {

@@ -11,7 +11,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
         return new String(relevantChars).contains("" + c);
     }
 
-    String grabDigits() {
+    String grabDigits(boolean decimal) {
         String valStr = "";
         char next;
         int i;
@@ -19,7 +19,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
         // Starts at 0 because count is incremented _after_ what's returned by advance()
         for (i = 0; i <= LOOKAHEAD_MAX; i++) {
             next = parser.peek(i);
-            if (isDigit(next)) {
+            if (isDigit(next) || (decimal && next == '.' && i > 0)) {
                 valStr += next;
             } else {
                 break;
@@ -43,20 +43,36 @@ class PrinterGCodeTokenizer extends TokenizerModule {
 
         while (!done) {
             if (currentToken == null) {
-                if (c == 'G') {
+                if (c == 'G' && parser.startingLine()) {
                     currentToken = PrinterGCodeToken.G_CMD;
-                    digitGrab = grabDigits();
-                    if (!digitGrab.equals("")) {
+                    digitGrab = grabDigits(false);
+                    if (!digitGrab.isEmpty()) {
                         currentIdx = Integer.parseInt(digitGrab);
                     }
-                } else if (c == 'M') {
+                } else if (c == 'M' && parser.startingLine()) {
                     currentToken = PrinterGCodeToken.M_CMD;
+                    digitGrab = grabDigits(false);
+                    if (!digitGrab.isEmpty()) {
+                        currentIdx = Integer.parseInt(digitGrab);
+                    }
                 } else if (c == 'X') {
                     currentToken = PrinterGCodeToken.X_PM;
+                    digitGrab = grabDigits(true);
+                    if (!digitGrab.isEmpty()) {
+                        currentValue = Double.parseDouble(digitGrab);
+                    }
                 } else if (c == 'Y') {
                     currentToken = PrinterGCodeToken.Y_PM;
+                    digitGrab = grabDigits(true);
+                    if (!digitGrab.isEmpty()) {
+                        currentValue = Double.parseDouble(digitGrab);
+                    }
                 } else if (c == 'Z') {
                     currentToken = PrinterGCodeToken.Z_PM;
+                    digitGrab = grabDigits(true);
+                    if (!digitGrab.isEmpty()) {
+                        currentValue = Double.parseDouble(digitGrab);
+                    }
                 } else if (c == 'I') {
                     currentToken = PrinterGCodeToken.I_PM;
                 } else if (c == 'J') {

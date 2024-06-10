@@ -113,4 +113,8 @@ class LazyParser {
     public void jump(int i) {
         pos += i;
     }
+
+    public boolean startingLine() {
+        return pos < 2;
+    }
 }
