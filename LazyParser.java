@@ -22,7 +22,7 @@ class LazyParser {
             scanner = new Scanner(file);
         } catch (IOException e) {
             System.out.println("Loading file failed");
-            // exit
+            System.exit(1);
         }
         parseGcodeFile();
     }
