@@ -6,9 +6,13 @@ import java.util.Arrays;
 
 // Transforms a GCode file into a structure of lines
 class LazyParser {
+    // ModularTokenizer
     Scanner scanner;
     ArrayList<Line> lines;
     ArrayList<ParserModule> parserModules;
+
+    private ArrayList<Token> tokens;
+    int pos;
 
     LazyParser(File file) {
         this(file, new ArrayList<ParserModule>());
@@ -16,6 +20,8 @@ class LazyParser {
 
     LazyParser(File file, ArrayList<ParserModule> pms) {
         lines = new ArrayList<Line>();
+        tokens = new ArrayList<Token>();
+        pos = 0;
         parserModules = pms;
 
         try {
@@ -27,34 +33,33 @@ class LazyParser {
         parseGcodeFile();
     }
 
-    void parseGcodeFile() {
-        String nextLineStr;
-        String[] words;
-        boolean lineIsComment;
-        Line nextLine;
-        GCodeCommand cmd;
-        while (scanner.hasNextLine()) {
-            nextLineStr = scanner.nextLine();
-            if (!nextLineStr.trim().isEmpty()) {
-                lineIsComment = (nextLineStr.substring(0,1).equals(";"));
-                words = nextLineStr.split("[\\s]");
+    void handleLineError(int ln, String line, GCodeError error) {
+        System.out.println("Error at line " + ln + ": " + error);
+        System.out.println(line);
+    }
 
-                if (lineIsComment) {
-                    cmd = null;
-                } else {
-                    cmd = new GCodeCommand(words[0]);
-                }
-                nextLine = new Line(lineIsComment, cmd, 
-                // Always skip first word in string bc it is either command or ";"
-                new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(words, 1, words.length))));
-                lines.add(nextLine);
-                ParserModule currentModule;
-                for (int i = 0; i < parserModules.size(); i++) {
-                    currentModule = parserModules.get(i);
-                    currentModule.parseLine(nextLine);
-                }
+    void parseGcodeFile() {
+        // scanTokens
+        String nextLineStr;
+
+        for (int lineNum = 1; scanner.hasNextLine(); lineNum++) {
+            nextLineStr = scanner.nextLine().trim();
+            if (!nextLineStr.isEmpty()) {
+                tokenizeLine(nextLineStr);
             }
         }
+    }
+
+    void tokenizeLine(String line) {
+        pos = 0;
+        char c;
+        while (pos < line.length()) {
+            c = advance(line);
+        }
+    }
+
+    char advance(String line) {
+        return line.charAt(pos++);
     }
 
     

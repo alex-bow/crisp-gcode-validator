@@ -1,4 +1,4 @@
-class 2DCoord {
+class Coord2D {
     float x;
     float y;
 }
