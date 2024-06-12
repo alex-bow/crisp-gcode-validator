@@ -8,8 +8,15 @@ class PrinterGCodeTokenizer extends TokenizerModule {
     }
 
     boolean caresAbout(char c) {
+        if (parser.hasStatus(ParserStatus.COMMENT)) {
+            if (parser.isNewLine()) {
+                parser.clearNewLine();
+                parser.clearStatus(ParserStatus.COMMENT);
+            } else {
+                return false;
+            }
+        }
         return new String(relevantChars).contains("" + c);
-    }
 
     String grabDigits(boolean decimal) {
         String valStr = "";

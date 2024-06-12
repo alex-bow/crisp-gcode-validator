@@ -13,10 +13,12 @@ class LazyParser {
     ArrayList<TokenizerModule> tokenizerModules;
 
     private ArrayList<Token> tokens;
+    private ArrayList<ParserStatus> parserStatuses;
     int pos;
     String currentLine;
 
     public int lineNum;
+    private boolean isNewLine;
 
     LazyParser(File file) {
         this(file, new ArrayList<ParserModule>());
@@ -25,6 +27,9 @@ class LazyParser {
     LazyParser(File file, ArrayList<ParserModule> pms) {
         lines = new ArrayList<Line>();
         tokens = new ArrayList<Token>();
+        parserStatuses = new ArrayList<ParserStatus>();
+
+        isNewLine = false;
 
         tokenizerModules = new ArrayList<TokenizerModule>();
         tokenizerModules.add(new PrinterGCodeTokenizer(this));
@@ -52,11 +57,28 @@ class LazyParser {
         String nextLineStr;
 
         for (lineNum = 1; scanner.hasNextLine(); lineNum++) {
+            isNewLine = true;
             nextLineStr = scanner.nextLine().trim();
             if (!nextLineStr.isEmpty()) {
                 tokenizeLine(nextLineStr, lineNum);
             }
         }
+    }
+
+    boolean isNewLine() {
+        return isNewLine;
+    }
+
+    void clearNewLine() {
+        isNewLine = false;
+    }
+
+    boolean hasStatus(ParserStatus status) {
+        return parserStatuses.contains(status);
+    }
+
+    boolean clearStatus(ParserStatus status) {
+        
     }
 
     void tokenizeLine(String line, int ln) {
