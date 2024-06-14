@@ -2,7 +2,6 @@ class PrinterGCodeTokenizer extends TokenizerModule {
 
     static char[] relevantChars = {'G', 'M', 'X', 'Y', 'Z', 'I', 'J', 'R', ';'};
     int advancement;
-    private boolean justIgnored; // Prevents IGNORE tokens from stacking up
 
     PrinterGCodeTokenizer(LazyParser parser) {
         super(parser);
@@ -11,13 +10,12 @@ class PrinterGCodeTokenizer extends TokenizerModule {
     boolean caresAbout(char c) {
         if (parser.hasStatus(PrinterGCodeStatus.COMMENT)) {
             if (parser.isNewLine()) {
-                System.out.println("Exiting a comment on " + c);
                 parser.clearStatus(PrinterGCodeStatus.COMMENT);
             } else {
                 return false;
             }
         }
-        return new String(relevantChars).contains("" + c);
+        return true; // new String(relevantChars).contains("" + c);
     }
 
     String grabDigits(boolean decimal) {
@@ -52,6 +50,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
 
         while (!done) {
             if (currentToken == null) {
+                System.out.print(c);
                 if (c == 'G' && parser.isNewLine()) {
                     currentToken = PrinterGCodeToken.G_CMD;
                     digitGrab = grabDigits(false);
@@ -88,27 +87,25 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     }
                     
                 } else if (c == 'I') {
+                    // I and J are currently nonfunctional (seeking for individual with no IXX)
                     currentToken = PrinterGCodeToken.I_PM;
-                    
                 } else if (c == 'J') {
                     currentToken = PrinterGCodeToken.J_PM;
-                    
                 } else if (c == 'R') {
                     currentToken = PrinterGCodeToken.R_PM;
-                    
-                } else if (c == ';') {
-                    if (parser.isNewLine()) {
-                        parser.setStatus(PrinterGCodeStatus.COMMENT);
-                        System.out.println("Found a comment, ignoring...");
-                        done = true;
+                    digitGrab = grabDigits(false);
+                    if (!digitGrab.isEmpty()) {
+                        currentValue = Integer.parseInt(digitGrab);
                     }
+                } else if (c == ';') {
+                    // Comments can start midline
+                    // TODO: does gcode escape comments?
+                    System.out.println("Comment beginning on line " + parser.lineNum);
+                    parser.setStatus(PrinterGCodeStatus.COMMENT);
+                    done = true;
                 } else {
                     if (parser.lastToken().type != PrinterGCodeToken.IGNORE) {
-                        Token t = new Token(PrinterGCodeToken.IGNORE, 0, 0.0, parser.lineNum);
-                        System.out.println("Ignoring..." + c);
-                        parser.addToken(t);
-                        done = true;
-                        justIgnored = true;
+                        currentToken = PrinterGCodeToken.IGNORE;
                     }
                 }
             } else {

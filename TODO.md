@@ -1,1 +1,1 @@
-* Numbers should be their own token (INT, FLOAT)
+* Parsing only one? token / line

@@ -70,7 +70,6 @@ class LazyParser {
     }
 
     void clearNewLine() {
-        System.out.println("Moved past new line");
         isNewLine = false;
     }
 
