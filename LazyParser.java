@@ -125,6 +125,15 @@ class LazyParser {
         tokens.add(token);
     }
 
+    public Token lastToken() {
+        if (tokens.size() > 0) {
+            return tokens.get(tokens.size() - 1);
+        } else {
+            return null;
+        }
+        
+    }
+
     public char advance() {
         return advance(currentLine);
     }
