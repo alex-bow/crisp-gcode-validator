@@ -27,13 +27,13 @@ class LazyParser {
     LazyParser(File file, ArrayList<ParserModule> pms) {
         lines = new ArrayList<Line>();
         tokens = new ArrayList<Token>();
-        parserStatuses = new ArrayList<ParserStatus>();
+        parserStatuses = new ArrayList<ParserStatus>(); // should be a set
 
         isNewLine = false;
 
         tokenizerModules = new ArrayList<TokenizerModule>();
         tokenizerModules.add(new PrinterGCodeTokenizer(this));
-        tokenizerModules.add(new PrusaCommentTokenizer(this));
+        // tokenizerModules.add(new PrusaCommentTokenizer(this));
 
         pos = 0;
         parserModules = pms;
@@ -70,6 +70,7 @@ class LazyParser {
     }
 
     void clearNewLine() {
+        System.out.println("Moved past new line");
         isNewLine = false;
     }
 
@@ -79,6 +80,10 @@ class LazyParser {
 
     void clearStatus(ParserStatus status) {
         parserStatuses.remove(status);
+    }
+
+    void setStatus(ParserStatus status) {
+        parserStatuses.add(status);
     }
 
     void tokenizeLine(String line, int ln) {
@@ -134,9 +139,5 @@ class LazyParser {
 
     public void jump(int i) {
         pos += i;
-    }
-
-    public boolean startingLine() {
-        return pos < 2;
     }
 }

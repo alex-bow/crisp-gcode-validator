@@ -1,6 +1,6 @@
 class PrinterGCodeTokenizer extends TokenizerModule {
 
-    static char[] relevantChars = {'G', 'M', 'X', 'Y', 'Z', 'I', 'J', 'R'};
+    static char[] relevantChars = {'G', 'M', 'X', 'Y', 'Z', 'I', 'J', 'R', ';'};
     int advancement;
     private boolean justIgnored; // Prevents IGNORE tokens from stacking up
 
@@ -11,7 +11,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
     boolean caresAbout(char c) {
         if (parser.hasStatus(PrinterGCodeStatus.COMMENT)) {
             if (parser.isNewLine()) {
-                parser.clearNewLine();
+                System.out.println("Exiting a comment on " + c);
                 parser.clearStatus(PrinterGCodeStatus.COMMENT);
             } else {
                 return false;
@@ -49,16 +49,17 @@ class PrinterGCodeTokenizer extends TokenizerModule {
         double currentValue = 0.0;
         boolean done = false;
         String digitGrab;
+        System.out.println("This is tokenizing " + c);
 
         while (!done) {
             if (currentToken == null) {
-                if (c == 'G' && parser.startingLine()) {
+                if (c == 'G' && parser.isNewLine()) {
                     currentToken = PrinterGCodeToken.G_CMD;
                     digitGrab = grabDigits(false);
                     if (!digitGrab.isEmpty()) {
                         currentIdx = Integer.parseInt(digitGrab);
                     }
-                } else if (c == 'M' && parser.startingLine()) {
+                } else if (c == 'M' && parser.isNewLine()) {
                     currentToken = PrinterGCodeToken.M_CMD;
                     digitGrab = grabDigits(false);
                     if (!digitGrab.isEmpty()) {
@@ -94,14 +95,19 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                 } else if (c == 'R') {
                     currentToken = PrinterGCodeToken.R_PM;
                     justIgnored = false;
+                } else if (c == ';') {
+                    if (parser.isNewLine()) {
+                        parser.setStatus(PrinterGCodeStatus.COMMENT);
+                        System.out.println("Found a comment, ignoring...");
+                        done = true;
+                    }
                 } else {
                     if (!justIgnored) {
                         Token t = new Token(PrinterGCodeToken.IGNORE, 0, 0.0, parser.lineNum);
-                        System.out.println("Ignoring...");
+                        System.out.println("Ignoring..." + c);
                         parser.addToken(t);
                         done = true;
                         justIgnored = true;
-                        return;
                     }
                 }
             } else {
@@ -110,13 +116,16 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     System.out.println("Adding " + t);
                     parser.addToken(t);
                     done = true;
-                    return;
                 } 
             }
-            c = parser.advance();
-            if (c == '\0') {
-                done = true;
-                return;
+            if (!done) {
+                c = parser.advance();
+                if (c == '\0') {
+                    done = true;
+                }
+            }
+            if (parser.isNewLine()) {
+                parser.clearNewLine();
             }
         }        
     }
