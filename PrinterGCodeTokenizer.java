@@ -49,7 +49,9 @@ class PrinterGCodeTokenizer extends TokenizerModule {
         String digitGrab;
 
         while (!done) {
+            System.out.println("c " + currentToken);
             if (currentToken == null) {
+                // System.out.print(c);
                 // Restructure all
                 if (c == 'G' && parser.isNewLine()) {
                     currentToken = PrinterGCodeToken.G_CMD;
@@ -92,11 +94,13 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                 } else if (c == 'J') {
                     currentToken = PrinterGCodeToken.J_PM;
                 } else if (c == 'R') {
+                    // It does reach this execution point
                     currentToken = PrinterGCodeToken.R_PM;
                     digitGrab = grabDigits(false);
                     if (!digitGrab.isEmpty()) {
                         currentValue = Integer.parseInt(digitGrab);
                     }
+                    System.out.println("I did indeed assign current token to " + currentToken);
                 } else if (c == ';') {
                     // Comments can start midline
                     // TODO: does gcode escape comments?
@@ -106,9 +110,12 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                 } else {
                     if (parser.lastToken().type != PrinterGCodeToken.IGNORE) {
                         currentToken = PrinterGCodeToken.IGNORE;
+                    } else {
+                        System.out.println("Already ignored...");
                     }
                 }
             } else {
+                System.out.println("a " + currentToken);
                 if (c == ' ') {
                     Token t = new Token(currentToken, currentIdx, currentValue, parser.lineNum);
                     System.out.println("Adding " + t);
@@ -116,6 +123,9 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     done = true;
                 } 
             }
+            System.out.println("b " + currentToken);
+
+            // FIX: THIS IS BANISHING COMMANDS ON EOL
             if (!done) {
                 c = parser.advance();
                 if (c == '\0') {
