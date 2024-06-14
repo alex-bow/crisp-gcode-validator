@@ -2,21 +2,23 @@ class PrinterGCodeTokenizer extends TokenizerModule {
 
     static char[] relevantChars = {'G', 'M', 'X', 'Y', 'Z', 'I', 'J', 'R'};
     int advancement;
+    private boolean justIgnored; // Prevents IGNORE tokens from stacking up
 
     PrinterGCodeTokenizer(LazyParser parser) {
         super(parser);
     }
 
     boolean caresAbout(char c) {
-        if (parser.hasStatus(ParserStatus.COMMENT)) {
+        if (parser.hasStatus(PrinterGCodeStatus.COMMENT)) {
             if (parser.isNewLine()) {
                 parser.clearNewLine();
-                parser.clearStatus(ParserStatus.COMMENT);
+                parser.clearStatus(PrinterGCodeStatus.COMMENT);
             } else {
                 return false;
             }
         }
         return new String(relevantChars).contains("" + c);
+    }
 
     String grabDigits(boolean decimal) {
         String valStr = "";
@@ -68,24 +70,39 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     if (!digitGrab.isEmpty()) {
                         currentValue = Double.parseDouble(digitGrab);
                     }
+                    justIgnored = false;
                 } else if (c == 'Y') {
                     currentToken = PrinterGCodeToken.Y_PM;
                     digitGrab = grabDigits(true);
                     if (!digitGrab.isEmpty()) {
                         currentValue = Double.parseDouble(digitGrab);
                     }
+                    justIgnored = false;
                 } else if (c == 'Z') {
                     currentToken = PrinterGCodeToken.Z_PM;
                     digitGrab = grabDigits(true);
                     if (!digitGrab.isEmpty()) {
                         currentValue = Double.parseDouble(digitGrab);
                     }
+                    justIgnored = false;
                 } else if (c == 'I') {
                     currentToken = PrinterGCodeToken.I_PM;
+                    justIgnored = false;
                 } else if (c == 'J') {
                     currentToken = PrinterGCodeToken.J_PM;
+                    justIgnored = false;
                 } else if (c == 'R') {
                     currentToken = PrinterGCodeToken.R_PM;
+                    justIgnored = false;
+                } else {
+                    if (!justIgnored) {
+                        Token t = new Token(PrinterGCodeToken.IGNORE, 0, 0.0, parser.lineNum);
+                        System.out.println("Ignoring...");
+                        parser.addToken(t);
+                        done = true;
+                        justIgnored = true;
+                        return;
+                    }
                 }
             } else {
                 if (c == ' ') {
@@ -94,7 +111,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     parser.addToken(t);
                     done = true;
                     return;
-                }
+                } 
             }
             c = parser.advance();
             if (c == '\0') {

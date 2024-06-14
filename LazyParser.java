@@ -77,8 +77,8 @@ class LazyParser {
         return parserStatuses.contains(status);
     }
 
-    boolean clearStatus(ParserStatus status) {
-        
+    void clearStatus(ParserStatus status) {
+        parserStatuses.remove(status);
     }
 
     void tokenizeLine(String line, int ln) {

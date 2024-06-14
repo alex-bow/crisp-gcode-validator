@@ -13,5 +13,11 @@ enum PrinterGCodeToken implements TokenBase {
 
     PARAM, // other than any types defined above
 
+    IGNORE,
+
     EOF
+}
+
+enum PrinterGCodeStatus implements ParserStatus {
+    COMMENT
 }
