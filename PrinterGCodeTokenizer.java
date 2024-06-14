@@ -50,7 +50,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
 
         while (!done) {
             if (currentToken == null) {
-                System.out.print(c);
+                // Restructure all
                 if (c == 'G' && parser.isNewLine()) {
                     currentToken = PrinterGCodeToken.G_CMD;
                     digitGrab = grabDigits(false);
