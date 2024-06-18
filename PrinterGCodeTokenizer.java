@@ -112,7 +112,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
             } else {
                 if (c == ' ') {
                     Token t = new Token(currentToken, currentIdx, currentValue, parser.lineNum);
-                    System.out.println("Adding " + t);
+                    //System.out.println("Adding " + t);
                     parser.addToken(t);
                     done = true;
                 } 
@@ -125,7 +125,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     // Hack to make sure tokens at EOL are added
                     if (currentToken != null) {
                         Token t = new Token(currentToken, currentIdx, currentValue, parser.lineNum);
-                        System.out.println("Adding " + t);
+                        // System.out.println("Adding " + t);
                         parser.addToken(t);
                     }
                     done = true;

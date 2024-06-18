@@ -33,7 +33,7 @@ class LazyParser {
 
         tokenizerModules = new ArrayList<TokenizerModule>();
         tokenizerModules.add(new PrinterGCodeTokenizer(this));
-        // tokenizerModules.add(new PrusaCommentTokenizer(this));
+        tokenizerModules.add(new PrusaCommentTokenizer(this));
 
         pos = 0;
         parserModules = pms;
@@ -107,13 +107,13 @@ class LazyParser {
         }
     }
 
-    // far - the # of chars to peek ahead.
+    // far - the # of chars to peek ahead. Will not peek past new line
     public char peek(int far) {
         return peek(currentLine, far);
     }
 
     private char peek(String line, int far) {
-        if (pos + far < line.length() - 1) {  
+        if (pos + far < line.length()) {  
             return line.charAt(pos + far);
         } else {
             return '\0';
