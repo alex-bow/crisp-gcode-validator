@@ -88,7 +88,8 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     }
                     
                 } else if (c == 'I') {
-                    // I and J are currently nonfunctional (seeking for individual with no IXX)
+                    // I and J are currently nonfunctional (It will never register the token because it is looking for
+                    // I rather than I00, etc
                     currentToken = PrinterGCodeToken.I_PM;
                 } else if (c == 'J') {
                     currentToken = PrinterGCodeToken.J_PM;
@@ -101,7 +102,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                 } else if (c == ';') {
                     // Comments can start midline
                     // TODO: does gcode escape comments?
-                    System.out.println("Comment beginning on line " + parser.lineNum);
+                    // System.out.println("Comment beginning on line " + parser.lineNum);
                     parser.setStatus(PrinterGCodeStatus.COMMENT);
                     done = true;
                 } else {
@@ -112,7 +113,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
             } else {
                 if (c == ' ') {
                     Token t = new Token(currentToken, currentIdx, currentValue, parser.lineNum);
-                    //System.out.println("Adding " + t);
+                    System.out.println("Adding " + t);
                     parser.addToken(t);
                     done = true;
                 } 
@@ -125,7 +126,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     // Hack to make sure tokens at EOL are added
                     if (currentToken != null) {
                         Token t = new Token(currentToken, currentIdx, currentValue, parser.lineNum);
-                        // System.out.println("Adding " + t);
+                        System.out.println("Adding " + t);
                         parser.addToken(t);
                     }
                     done = true;
