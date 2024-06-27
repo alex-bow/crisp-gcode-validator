@@ -1,3 +1,5 @@
+package crisp;
+
 class PrinterGCodeTokenizer extends TokenizerModule {
 
     static char[] relevantChars = {'G', 'M', 'X', 'Y', 'Z', 'I', 'J', 'R', ';'};
@@ -39,7 +41,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
     // from craftinginterpreters
     private boolean isDigit(char c) {
         return c >= '0' && c <= '9';
-    } 
+    }
 
     void tokenize(char c) {
         TokenBase currentToken = null;
@@ -58,35 +60,35 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     if (!digitGrab.isEmpty()) {
                         currentIdx = Integer.parseInt(digitGrab);
                     }
-                    
+
                 } else if (c == 'M' && parser.isNewLine()) {
                     currentToken = PrinterGCodeToken.M_CMD;
                     digitGrab = grabDigits(false);
                     if (!digitGrab.isEmpty()) {
                         currentIdx = Integer.parseInt(digitGrab);
                     }
-                    
+
                 } else if (c == 'X') {
                     currentToken = PrinterGCodeToken.X_PM;
                     digitGrab = grabDigits(true);
                     if (!digitGrab.isEmpty()) {
                         currentValue = Double.parseDouble(digitGrab);
                     }
-                    
+
                 } else if (c == 'Y') {
                     currentToken = PrinterGCodeToken.Y_PM;
                     digitGrab = grabDigits(true);
                     if (!digitGrab.isEmpty()) {
                         currentValue = Double.parseDouble(digitGrab);
                     }
-                    
+
                 } else if (c == 'Z') {
                     currentToken = PrinterGCodeToken.Z_PM;
                     digitGrab = grabDigits(true);
                     if (!digitGrab.isEmpty()) {
                         currentValue = Double.parseDouble(digitGrab);
                     }
-                    
+
                 } else if (c == 'I') {
                     // I and J are currently nonfunctional (It will never register the token because it is looking for
                     // I rather than I00, etc
@@ -116,7 +118,7 @@ class PrinterGCodeTokenizer extends TokenizerModule {
                     System.out.println("Adding " + t);
                     parser.addToken(t);
                     done = true;
-                } 
+                }
             }
 
             // FIX: Some commands don't set done? Or why does this prevent infinite loop
@@ -135,6 +137,6 @@ class PrinterGCodeTokenizer extends TokenizerModule {
             if (parser.isNewLine()) {
                 parser.clearNewLine();
             }
-        }        
+        }
     }
 }

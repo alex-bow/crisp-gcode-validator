@@ -1,3 +1,5 @@
+package crisp;
+
 enum StatusType {
     SUCCESS,
     HARD_FAIL_PRINTER_TYPE,

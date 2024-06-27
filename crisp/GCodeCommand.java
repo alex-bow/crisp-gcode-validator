@@ -1,3 +1,5 @@
+package crisp;
+
 enum GCodeCommandType {
     LINEAR_INTERPOLATION,
     CLOCKWISE_INTERPOLATION,
@@ -13,4 +15,3 @@ class GCodeCommand {
     GCodeCommand(String cmdString) {
     }
 }
-

@@ -1,3 +1,5 @@
+package crisp;
+
 class Token {
     TokenBase type;
     int idx; // eg G00 - 0
@@ -8,7 +10,7 @@ class Token {
     Token(TokenBase type, int idx, double value, int line) {
         this.type = type;
         this.idx = idx;
-        this.value = value; 
+        this.value = value;
         this.strValue = null;
         this.line = line;
     }

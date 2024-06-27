@@ -1,4 +1,4 @@
-package tool;
+package crisp.tool;
 
 // This AST generator is from Bob Nydstrom's "Crafting Interpreters", chapter 5
 // "Representing Code"

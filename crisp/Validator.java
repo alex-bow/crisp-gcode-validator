@@ -1,3 +1,5 @@
+package crisp;
+
 import java.util.Set;
 
 // Base class for validation modules used by a ValidationBox; each module should validate on separate criteria

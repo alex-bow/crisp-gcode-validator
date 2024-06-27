@@ -1,7 +1,9 @@
+package crisp;
+
 class PrusaCommentTokenizer extends TokenizerModule {
 
     // For this module, refers to something that can start a relevant/considered comment
-    static char[] relevantChars = {';'}; 
+    static char[] relevantChars = {';'};
 
     PrusaCommentTokenizer(LazyParser parser) {
         super(parser);

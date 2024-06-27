@@ -1,3 +1,5 @@
+package crisp;
+
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -6,11 +8,11 @@ import java.util.HashSet;
 class ValidationBox {
     LazyParser parser;
     ArrayList<Validator> validators;
-    Set<StatusType> statuses; 
+    Set<StatusType> statuses;
 
     ValidationBox(LazyParser newParser, ArrayList<Validator> newValidators) {
         parser = newParser;
-        validators = newValidators; 
+        validators = newValidators;
         statuses = new HashSet<StatusType>();
     }
 
@@ -36,10 +38,10 @@ class ValidationBox {
             }
             // REPLACE - make modifiable (JSON?)
             switch (s) {
-                case StatusType.SUCCESS: 
+                case StatusType.SUCCESS:
                     msg = "No issues found in gcode!";
                     break;
-                case StatusType.HARD_FAIL_PRINTER_TYPE: 
+                case StatusType.HARD_FAIL_PRINTER_TYPE:
                     msg = "This was not sliced for a Prusa Mk3 printer.";
                     break;
                 case StatusType.HARD_FAIL_PROFILE_VERSION:
@@ -51,7 +53,7 @@ class ValidationBox {
                 case StatusType.HARD_FAIL_NO_PROFILE:
                     msg = "This was not sliced using our profiles; please download the latest profiles from the Library website.";
                     break;
-                case StatusType.SOFT_FAIL_HIGH_INFILL: 
+                case StatusType.SOFT_FAIL_HIGH_INFILL:
                     msg = "Your infill percentage is very high.";
                     break;
                 case StatusType.SOFT_FAIL_SUPPORT_TYPE:

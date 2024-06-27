@@ -1,3 +1,5 @@
+package crisp;
+
 enum PrinterGCodeToken implements TokenBase {
     G_CMD,
     M_CMD,
