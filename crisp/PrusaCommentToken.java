@@ -2,6 +2,6 @@ package crisp;
 
 enum PrusaCommentToken implements TokenBase {
     KEY,
-    EQUALS,
+    // EQUALS, Didn't end up seeing use, perhaps should?
     VALUE
 }

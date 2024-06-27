@@ -4,17 +4,19 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 // Transforms a GCode file into a structure of lines
 class LazyParser {
     // ModularTokenizer
     Scanner scanner;
-    ArrayList<Line> lines;
-    ArrayList<ParserModule> parserModules;
-    ArrayList<TokenizerModule> tokenizerModules;
+    // ArrayList<Line> lines;
+    // ArrayList<ParserModule> parserModules;
+    List<TokenizerModule> tokenizerModules;
+    List<ConsumerModule> consumerModules;
 
-    ArrayList<Token> tokens;
+    List<Token> tokens;
     private ArrayList<ParserStatus> parserStatuses;
     int pos;
     String currentLine;
@@ -22,12 +24,12 @@ class LazyParser {
     public int lineNum;
     private boolean isNewLine;
 
-    LazyParser(File file) {
-        this(file, new ArrayList<ParserModule>());
-    }
+    // LazyParser(File file) {
+    //     this(file, new ArrayList<ParserModule>());
+    // }
 
-    LazyParser(File file, ArrayList<ParserModule> pms) {
-        lines = new ArrayList<Line>();
+    LazyParser(File file) {
+        // lines = new ArrayList<Line>();
         tokens = new ArrayList<Token>();
         parserStatuses = new ArrayList<ParserStatus>(); // should be a set
 
@@ -37,8 +39,11 @@ class LazyParser {
         tokenizerModules.add(new PrinterGCodeTokenizer(this));
         tokenizerModules.add(new PrusaCommentTokenizer(this));
 
+        consumerModules = new ArrayList<ConsumerModule>();
+        consumerModules.add(new PrusaCommentConsumer(this));
+
         pos = 0;
-        parserModules = pms;
+        // parserModules = pms;
 
         try {
             scanner = new Scanner(file);
@@ -47,6 +52,12 @@ class LazyParser {
             System.exit(1);
         }
         parseGcodeFile();
+        
+        // Each ConsumerModule can define its own grammar, up to
+        // and including full ASTs
+        for (ConsumerModule consum : consumerModules) {
+            consum.parseTokens();
+        }
     }
 
     void handleLineError(int ln, String line, GCodeError error) {
@@ -65,6 +76,7 @@ class LazyParser {
                 tokenizeLine(nextLineStr, lineNum);
             }
         }
+        tokens.add(new Token(PrinterGCodeToken.EOF, 0, 0.0, lineNum));
     }
 
     boolean isNewLine() {
