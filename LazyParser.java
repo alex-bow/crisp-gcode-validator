@@ -12,7 +12,7 @@ class LazyParser {
     ArrayList<ParserModule> parserModules;
     ArrayList<TokenizerModule> tokenizerModules;
 
-    private ArrayList<Token> tokens;
+    ArrayList<Token> tokens;
     private ArrayList<ParserStatus> parserStatuses;
     int pos;
     String currentLine;
@@ -100,7 +100,7 @@ class LazyParser {
                 if(module.caresAbout(c)) {
                     //System.out.println(line);
                     //System.out.println(module + " has taken an interest in " + c);
-                    module.tokenize(c); 
+                    module.tokenize(c);
                     // Tokenize will hold the loop until module creates a complete token
                 }
             }
@@ -113,7 +113,7 @@ class LazyParser {
     }
 
     private char peek(String line, int far) {
-        if (pos + far < line.length()) {  
+        if (pos + far < line.length()) {
             return line.charAt(pos + far);
         } else {
             return '\0';
@@ -130,7 +130,7 @@ class LazyParser {
         } else {
             return null;
         }
-        
+
     }
 
     public char advance() {
@@ -138,7 +138,7 @@ class LazyParser {
     }
 
     private char advance(String line) {
-        if (pos < line.length() - 1) {  
+        if (pos < line.length() - 1) {
             return line.charAt(pos++);
         } else {
             return '\0';

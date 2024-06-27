@@ -8,3 +8,5 @@ param := (X_PM | Y_PM | Z_PM | I_PM | J_PM | R_PM)*
 Prusa comment tokens
 
 config := KEY VALUE
+
+As far as I can determine there is never precedence ambiguity
