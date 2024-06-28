@@ -1,8 +1,12 @@
 package crisp;
 
 import java.util.List;
+import java.util.HashMap;
 
 abstract class ConsumerModule {
+
+    HashMap<String, Token> configs; // Shouldn't be here, only for comment consumer
+
     List<Token> tokens;
     int current;
 

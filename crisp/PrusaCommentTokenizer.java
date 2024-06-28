@@ -34,7 +34,7 @@ class PrusaCommentTokenizer extends TokenizerModule {
             next = parser.peek(i);
             if (next == '=') {
                 Token key = new Token(PrusaCommentToken.KEY, keyStr.trim(), parser.lineNum);
-                System.out.println("Comment token " + key);
+                // System.out.println("Comment token " + key);
                 parser.addToken(key);
                 parser.clearStatus(PrusaCommentTokenizerStatus.IN_KEY);
                 parser.setStatus(PrusaCommentTokenizerStatus.IN_VALUE);
@@ -62,7 +62,7 @@ class PrusaCommentTokenizer extends TokenizerModule {
             // Scopes to end of line (\0 indicates peek hit newline)
             if (next == '\0') {
                 Token key = new Token(PrusaCommentToken.VALUE, keyStr.trim(), parser.lineNum);
-                System.out.println("Comment token " + key);
+                // System.out.println("Comment token " + key);
                 parser.addToken(key);
                 parser.clearStatus(PrusaCommentTokenizerStatus.IN_VALUE);
                 break;

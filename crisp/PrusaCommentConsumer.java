@@ -3,11 +3,10 @@ package crisp;
 import java.util.HashMap;
 
 class PrusaCommentConsumer extends ConsumerModule {
-    HashMap<Token, Token> configs;
 
     PrusaCommentConsumer(LazyParser p) {
         super(p);
-        configs = new HashMap<Token, Token>();
+        configs = new HashMap<String, Token>();
         // The data structure a ConsumerModule uses can be this simple for this
         // simple of a grammar
     }
@@ -19,8 +18,8 @@ class PrusaCommentConsumer extends ConsumerModule {
             if (check(PrusaCommentToken.KEY)) {
                 advance();
                 if (check(PrusaCommentToken.VALUE))
-                    System.out.println("About to add config " + t + " " + peek());
-                    configs.put(t, peek());
+                    // System.out.println("About to add config " + t + " " + peek());
+                    configs.put(t.strValue, peek());
                 }
             }
 
