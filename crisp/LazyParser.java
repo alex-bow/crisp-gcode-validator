@@ -6,44 +6,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
 
-// Transforms a GCode file into a structure of lines
+// Takes in a GCode file and creates a list of tokens defined by its TokenizerModules,
+// then uses those tokens to create data structurse according to the grammars
+// provided in its ConsumerModules.
+
+// TokenizerModules may assign and read ParserStatuses for ease in parsing.
+
 class LazyParser {
-    // ModularTokenizer
-    Scanner scanner;
-    // ArrayList<Line> lines;
-    // ArrayList<ParserModule> parserModules;
-    List<TokenizerModule> tokenizerModules;
-    List<ConsumerModule> consumerModules;
 
-    List<Token> tokens;
-    private ArrayList<ParserStatus> parserStatuses;
-    int pos;
+    Scanner scanner;
+
+    List<TokenizerModule> tokenizerModules = new ArrayList<TokenizerModule>();
+    List<ConsumerModule> consumerModules = new ArrayList<ConsumerModule>();
+
+    List<Token> tokens = new ArrayList<Token>();
+    private Set<ParserStatus> parserStatuses = new HashSet<ParserStatus>();
+    int pos = 0;
     String currentLine;
 
     public int lineNum;
-    private boolean isNewLine;
-
-    // LazyParser(File file) {
-    //     this(file, new ArrayList<ParserModule>());
-    // }
+    private boolean isNewLine = false;
 
     LazyParser(File file) {
-        // lines = new ArrayList<Line>();
-        tokens = new ArrayList<Token>();
-        parserStatuses = new ArrayList<ParserStatus>(); // should be a set
 
-        isNewLine = false;
-
-        tokenizerModules = new ArrayList<TokenizerModule>();
         tokenizerModules.add(new PrinterGCodeTokenizer(this));
         tokenizerModules.add(new PrusaCommentTokenizer(this));
 
-        consumerModules = new ArrayList<ConsumerModule>();
         consumerModules.add(new PrusaCommentConsumer(this));
-
-        pos = 0;
-        // parserModules = pms;
 
         try {
             scanner = new Scanner(file);
@@ -74,8 +66,8 @@ class LazyParser {
         System.out.println(line);
     }
 
+    // Creates a list of tokens based on a GCode file
     void parseGcodeFile() {
-        // scanTokens
         String nextLineStr;
 
         for (lineNum = 1; scanner.hasNextLine(); lineNum++) {

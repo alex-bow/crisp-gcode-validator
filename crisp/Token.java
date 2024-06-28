@@ -1,4 +1,4 @@
-package crisp;
+package crisp
 
 class Token {
     TokenBase type;

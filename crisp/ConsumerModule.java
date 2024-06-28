@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 abstract class ConsumerModule<T> {
 
-    T data;
+    public T data; // Stores whatever data structure this type of module deals in
 
     List<Token> tokens;
     int current;
