@@ -52,12 +52,21 @@ class LazyParser {
             System.exit(1);
         }
         parseGcodeFile();
-        
+
         // Each ConsumerModule can define its own grammar, up to
         // and including full ASTs
         for (ConsumerModule consum : consumerModules) {
             consum.parseTokens();
         }
+    }
+
+    ConsumerModule getConsumer(Class<? extends ConsumerModule> cType) {
+        for (ConsumerModule c : consumerModules) {
+            if (c.getClass() == cType) {
+                return c;
+            }
+        }
+        return null;
     }
 
     void handleLineError(int ln, String line, GCodeError error) {
