@@ -3,9 +3,9 @@ package crisp;
 import java.util.List;
 import java.util.HashMap;
 
-abstract class ConsumerModule {
+abstract class ConsumerModule<T> {
 
-    HashMap<String, Token> configs; // Shouldn't be here, only for comment consumer
+    T data;
 
     List<Token> tokens;
     int current;

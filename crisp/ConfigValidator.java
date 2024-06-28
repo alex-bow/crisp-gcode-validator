@@ -15,14 +15,14 @@ class ConfigValidator extends ValidationModule {
 
     void validate(LazyParser parser) {
         Class<? extends ConsumerModule> cl = new PrusaCommentConsumer(parser).getClass();
-        ConsumerModule commentConsumer = parser.getConsumer(cl);
+        PrusaCommentConsumer commentConsumer = (PrusaCommentConsumer) parser.getConsumer(cl);
         if (commentConsumer == null) {
             System.err.println("No Prusa comment consumer present on parser.");
             return;
         }
 
         for (Map.Entry<String, List<String>> entry : forbidden.entrySet()) {
-            Token value = commentConsumer.configs.get(entry.getKey());
+            Token value = commentConsumer.data.get(entry.getKey());
             System.out.println(entry.getKey());
             System.out.println(value);
             if (value != null && (entry.getValue().contains(value.strValue) ||
