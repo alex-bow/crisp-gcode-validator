@@ -1,16 +1,15 @@
 package crisp;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 class PrusaCommentConsumer extends ConsumerModule {
-    static int MAX_PARAMS = 999; // Probably not ideal implementation
-
-    List<PrusaCommentConfig> configs;
+    HashMap<Token, Token> configs;
 
     PrusaCommentConsumer(LazyParser p) {
         super(p);
-        configs = new ArrayList<PrusaCommentConfig>();
+        configs = new HashMap<Token, Token>();
+        // The data structure a ConsumerModule uses can be this simple for this
+        // simple of a grammar
     }
 
     void examineToken(Token t) {
@@ -21,7 +20,7 @@ class PrusaCommentConsumer extends ConsumerModule {
                 advance();
                 if (check(PrusaCommentToken.VALUE))
                     System.out.println("About to add config " + t + " " + peek());
-                    configs.add(new PrusaCommentConfig(t, peek()));
+                    configs.put(t, peek());
                 }
             }
 
