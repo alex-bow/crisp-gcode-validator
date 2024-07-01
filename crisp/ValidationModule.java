@@ -1,6 +1,6 @@
 package crisp;
 
 abstract class ValidationModule {
-    void validate(LazyParser parser) { 
+    void validate(LazyParser parser, Validator validator) { 
     }
 }
