@@ -35,7 +35,8 @@ class LazyParser {
         tokenizerModules.add(new PrinterGCodeTokenizer(this));
         tokenizerModules.add(new PrusaCommentTokenizer(this));
 
-        consumerModules.add(new PrusaCommentConsumer(this));
+        // consumerModules.add(new PrusaCommentConsumer(this));
+        consumerModules.add(new ToolPathConsumer(this));
 
         try {
             scanner = new Scanner(file);
