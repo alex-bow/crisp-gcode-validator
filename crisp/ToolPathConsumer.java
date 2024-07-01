@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
-    List<Vector2D> toolPath = new ArrayList<Vector2D>();
+    List<Vector3D> toolPath = new ArrayList<Vector3D>();
 
     ToolPathConsumer(LazyParser p) {
         super(p);
@@ -33,9 +33,35 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
     }
 
     public void generateToolPath() {
+        Coord3D start = new Coord3D(0.0, 0.0, 0.0);
+        Coord3D current = start;
         for (GCodeCommand cmd : data) {
-            System.out.println("Adding " + cmd + " to toolpath");
+            double x = 0.0;
+            double y = 0.0;
+            double z = 0.0;
+            if (cmd.type == PrinterGCodeToken.G_CMD && cmd.idx == 1) {
+                // Linear motion
+                for (Token param : cmd.params) {
+                    if (param.type == PrinterGCodeToken.X_PM) {
+                        x += param.value;
+                    } else if (param.type == PrinterGCodeToken.Y_PM) {
+                        y += param.value;
+                    } else if (param.type == PrinterGCodeToken.Z_PM) {
+                        z += param.value;
+                    }
+                }
+                start = current;
+                current = new Coord3D(current.x + x, current.y + y, current.z + z);
+                toolPath.add(new Vector3D(start, current));
+            }
         }
+        System.out.println("There are " + toolPath.size() + " vectors in the toolpath.");
+        double l = 0.0;
+        for (Vector3D v : toolPath) {
+            l += v.length();
+        }
+        System.out.println("The extruder travels a total of " + (l / (10 * 100 * 1000)) +
+            " km in this print.");
     }
 
     boolean isParam() {
@@ -44,35 +70,4 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
             check(PrinterGCodeToken.I_PM) || check(PrinterGCodeToken.Z_PM) ||
             check(PrinterGCodeToken.PARAM);
     }
-}
-
-class GCodeCommand {
-    TokenBase type;
-    int idx;
-    int line;
-    private List<Token> params = new ArrayList<Token>();
-
-    GCodeCommand(Token t) {
-        type = t.type;
-        idx = t.idx;
-        line = t.line;
-    }
-
-    public void addParam(Token t) {
-        params.add(t);
-    }
-
-    public String toString() {
-        return type + " " + idx + " -> " + paramsString();
-    }
-
-    private String paramsString() {
-        String pretty = "";
-        for (Token t : params) {
-            pretty += t + " ";
-        }
-        return pretty;
-    }
-
-
 }
