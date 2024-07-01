@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
+    List<Vector2D> toolPath = new ArrayList<Vector2D>();
+
     ToolPathConsumer(LazyParser p) {
         super(p);
         data = new ArrayList<GCodeCommand>();
@@ -19,8 +21,20 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                     cmd.addParam(peek());
                     advance();
                 }
-                System.out.println(cmd);
+                data.add(cmd);
+                // System.out.println(cmd);
             }
+        }
+    }
+
+    void parseTokens() {
+        super.parseTokens();
+        generateToolPath();
+    }
+
+    public void generateToolPath() {
+        for (GCodeCommand cmd : data) {
+            System.out.println("Adding " + cmd + " to toolpath");
         }
     }
 
