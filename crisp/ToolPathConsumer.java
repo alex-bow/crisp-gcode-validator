@@ -66,12 +66,11 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                 Double zsp = start.z * PRECISION;
                 Integer zStartKey = zsp.intValue();
                 if (zKey != zStartKey) { // float math!
-                    System.out.println(z + " -> " + start.z);
-                    System.out.println("Switching layer by " + (z - start.z));
                     if (toolPath.containsKey(zKey)) {
-                        System.out.println("We already visited layer " + z);
+                        // System.out.println("We already visited layer " + z);
                         layer = toolPath.get(zKey);
                     } else {
+                        System.out.println("Time to add layer" + z);
                         layer = new ArrayList<Vector3D>();
                         toolPath.put(zKey, layer);
                     }
