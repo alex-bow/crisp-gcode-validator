@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
-    Map<Double, List<Vector3D>> toolPath = new HashMap<Double, List<Vector3D>>();
+    Map<Integer, List<Vector3D>> toolPath = new HashMap<Integer, List<Vector3D>>();
+
+    static int PRECISION = 100;
 
     ToolPathConsumer(LazyParser p) {
         super(p);
@@ -58,15 +60,20 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                 start = current;
                 current = new Coord3D(x, y, z); // coords are absolute
                 // THIS IS A GCODE CONFIG SETTING WE SHOULD RECOGNIZE
-                if (Math.abs(z - start.z) > 0.000001) { // float math!
+
+                Double zp = z * PRECISION;
+                Integer zKey = zp.intValue();
+                Double zsp = start.z * PRECISION;
+                Integer zStartKey = zsp.intValue();
+                if (zKey != zStartKey) { // float math!
                     System.out.println(z + " -> " + start.z);
                     System.out.println("Switching layer by " + (z - start.z));
-                    if (toolPath.containsKey(z)) {
+                    if (toolPath.containsKey(zKey)) {
                         System.out.println("We already visited layer " + z);
-                        layer = toolPath.get(z);
+                        layer = toolPath.get(zKey);
                     } else {
                         layer = new ArrayList<Vector3D>();
-                        toolPath.put(z, layer);
+                        toolPath.put(zKey, layer);
                     }
                 }
                 layer.add(new Vector3D(start, current));
