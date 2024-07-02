@@ -70,7 +70,7 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                         // System.out.println("We already visited layer " + z);
                         layer = toolPath.get(zKey);
                     } else {
-                        System.out.println("Time to add layer" + z);
+                        // System.out.println("Time to add layer" + z);
                         layer = new ArrayList<Vector3D>();
                         toolPath.put(zKey, layer);
                     }
@@ -81,9 +81,12 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
         System.out.println("There are " + toolPath.size() + " layers in the toolpath.");
         double l = 0.0;
         for (List<Vector3D> lr : toolPath.values()) {
+            double j = 0.0;
             for (Vector3D v : lr) {
-                l += v.length();
+                j += v.length();
             }
+            System.out.println("In this layer, the extruder travels " + (j / (10 * 100)) + " m");
+            l += j;
         }
         System.out.println("The extruder travels a total of " + (l / (10 * 100 * 1000)) +
             " km in this print.");
