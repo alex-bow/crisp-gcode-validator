@@ -85,11 +85,11 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
             for (Vector3D v : lr) {
                 j += v.length();
             }
-            System.out.println("In this layer, the extruder travels " + (j / (10 * 100)) + " m");
+            //System.out.println("In this layer, the extruder travels " + (j / (10 * 100)) + " m");
             l += j;
         }
-        System.out.println("The extruder travels a total of " + (l / (10 * 100 * 1000)) +
-            " km in this print.");
+        //System.out.println("The extruder travels a total of " + (l / (10 * 100 * 1000)) +
+            //" km in this print.");
     }
 
     boolean isParam() {

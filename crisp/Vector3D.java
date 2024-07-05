@@ -16,7 +16,7 @@ class Vector3D {
     }
 
     public double dy() {
-        return end.x - start.x;
+        return end.y - start.y;
     }
 
     public double dz() {
@@ -26,5 +26,13 @@ class Vector3D {
     public double length() {
         return Math.sqrt(Math.pow(start.x + end.x, 2) + Math.pow(start.y + end.y, 2) +
             Math.pow(start.z + end.z, 2));
+    }
+
+    public Coord3D center() {
+        return new Coord3D(start.x + dx() / 2, start.y + dy() / 2, start.z + dz() / 2);
+    }
+
+    public String toString() {
+        return "<" + dx() + ", " + dy() + ", " + dz() + ">";
     }
 }
