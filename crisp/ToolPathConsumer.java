@@ -43,7 +43,11 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
         Coord3D start = new Coord3D(0.0, 0.0, 0.0);
         Coord3D current = start;
         List<Vector3D> layer = new ArrayList<Vector3D>();
+        toolPath.put(100, layer); // This is a placeholder; zkey doesn't work.
+        // We'll pretend everything is in one layer; representation is not dependent
+        // on layers
         for (GCodeCommand cmd : data) {
+            System.out.println("Generating toolpath from " + cmd);
             Double x = current.x;
             Double y = current.y;
             Double z = current.z;
@@ -62,37 +66,43 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
 
                 start = current;
                 current = new Coord3D(x, y, z); // coords are absolute
-                // THIS IS A GCODE CONFIG SETTING WE SHOULD RECOGNIZE
+                // TODO THIS IS A GCODE CONFIG SETTING WE SHOULD RECOGNIZE
 
                 Double zp = z * PRECISION;
                 Integer zKey = zp.intValue();
                 Double zsp = start.z * PRECISION;
                 Integer zStartKey = zsp.intValue();
-                if (zKey != zStartKey) { // float math!
-                    if (toolPath.containsKey(zKey)) {
-                        // System.out.println("We already visited layer " + z);
-                        layer = toolPath.get(zKey);
-                    } else {
-                        // System.out.println("Time to add layer" + z);
-                        layer = new ArrayList<Vector3D>();
-                        toolPath.put(zKey, layer);
-                    }
-                }
+
+                // if (zKey != zStartKey) { // float math!
+                //     if (toolPath.containsKey(zKey)) {
+                //         // System.out.println("We already visited layer " + z);
+                //         layer = toolPath.get(zKey);
+                //     } else {
+                //         // System.out.println("Time to add layer" + z);
+                //         layer = new ArrayList<Vector3D>();
+                //         toolPath.put(zKey, layer);
+                //     }
+                // }
                 Vector3D path = new Vector3D(start, current);
+                System.out.println("Created the path " + path);
                 // System.out.println("Moving from " + start + " to " + current);
                 layer.add(path);
+                System.out.println("Layer currently contains " + layer.size() + " paths");
             }
         }
         System.out.println("There are " + toolPath.size() + " layers in the toolpath.");
         double l = 0.0;
+        int k = 0;
         for (List<Vector3D> lr : toolPath.values()) {
             double j = 0.0;
             for (Vector3D v : lr) {
                 j += v.length();
+                k += 1;
             }
             //System.out.println("In this layer, the extruder travels " + (j / (10 * 100)) + " m");
             l += j;
         }
+        System.out.println("for a total of " + k + " vectors");
         //System.out.println("The extruder travels a total of " + (l / (10 * 100 * 1000)) +
             //" km in this print.");
     }

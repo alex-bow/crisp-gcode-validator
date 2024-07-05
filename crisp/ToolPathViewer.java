@@ -21,9 +21,15 @@ public class ToolPathViewer extends Application {
     static LazyParser parser;
     private static double VECTOR_RADIUS = 0.03;
 
+    static int zoom = -30;
+
     // Probably not structurally optimal
     public static void addParser(LazyParser p) {
         parser = p;
+    }
+
+    public static void setZoom(int z) {
+        zoom = z;
     }
 
     @Override
@@ -32,8 +38,15 @@ public class ToolPathViewer extends Application {
 
         Scene scene = new Scene(root, 1600, 900);
 
+        // This camera by default is small. <6, 6, 6> ray originating from origin gets close
+        // to window bounds
+
         PerspectiveCamera camera = new PerspectiveCamera(true);
-        camera.setTranslateZ(-20);
+        // TODO Customizing zoom might be a way to constrain large prints to be visible in view
+        // Possibly cannot translate beyond -100
+        camera.setTranslateZ(zoom);
+        camera.setTranslateX(75);
+        camera.setTranslateY(5);
         scene.setCamera(camera);
 
         stage.setScene(scene);
@@ -43,17 +56,10 @@ public class ToolPathViewer extends Application {
         int i = 0;
         for (List<Vector3D> lr : parser.tpc().toolPath.values()) {
             for (Vector3D v : lr) {
-                if (i < 10) {
-                    System.out.println("Placing a vector from" + v.start + " to " + v.end);
-                    System.out.println("It has the dimensions " + v + " for the length " + v.length());
-                    renderVector(root, v);
-                    if (v.length() > 1) {
-
-                        //i += 1;
-                    }
-                } else {
-                    break;
-                }
+                System.out.println("This layer contains " + lr.size() + " vectors");
+                System.out.println("Placing a vector from" + v.start + " to " + v.end);
+                System.out.println("It has the dimensions " + v + " for the length " + v.length());
+                renderVector(root, v);
             }
         }
         // guideline
