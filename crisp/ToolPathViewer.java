@@ -56,11 +56,11 @@ public class ToolPathViewer extends Application {
                 }
             }
         }
-        //
-        // Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(1.0, 1.0, 1.0));
+        // guideline
+        Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(6.0, 6.0, 6.0));
         // Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(2.0, 3.0, 0.0));
         //
-        // renderVector(root, a);
+        renderVector(root, a);
         // renderVector(root, b);
 
         stage.setTitle("G-Code Viewer Demo ");

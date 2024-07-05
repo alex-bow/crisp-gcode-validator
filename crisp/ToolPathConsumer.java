@@ -17,7 +17,7 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
 
     // FIX: This method is skipping every other line of tokens
     void examineToken(Token t) {
-        System.out.println("consumer is examining " + t);
+        //System.out.println("consumer is examining " + t);
         if (t.type instanceof PrinterGCodeToken) {
             // we don't care about any other types
             if (check(PrinterGCodeToken.M_CMD) || check(PrinterGCodeToken.G_CMD)) {
@@ -26,7 +26,7 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                     advance();
                     cmd.addParam(peek());
                 }
-                System.out.println("Adding " + cmd + " to tool path");
+                //System.out.println("Adding " + cmd + " to tool path");
                 data.add(cmd);
             } else {
                 //
