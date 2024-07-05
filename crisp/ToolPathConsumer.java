@@ -15,18 +15,21 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
         data = new ArrayList<GCodeCommand>();
     }
 
+    // FIX: This method is skipping every other line of tokens
     void examineToken(Token t) {
+        System.out.println("consumer is examining " + t);
         if (t.type instanceof PrinterGCodeToken) {
             // we don't care about any other types
             if (check(PrinterGCodeToken.M_CMD) || check(PrinterGCodeToken.G_CMD)) {
                 GCodeCommand cmd = new GCodeCommand(t);
-                advance();
-                while (isParam()) {
-                    cmd.addParam(peek());
+                while (nextIsParam()) {
                     advance();
+                    cmd.addParam(peek());
                 }
+                System.out.println("Adding " + cmd + " to tool path");
                 data.add(cmd);
-                System.out.println(cmd);
+            } else {
+                //
             }
         }
     }
@@ -99,5 +102,12 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
             check(PrinterGCodeToken.Z_PM) || check(PrinterGCodeToken.R_PM) ||
             check(PrinterGCodeToken.I_PM) || check(PrinterGCodeToken.Z_PM) ||
             check(PrinterGCodeToken.PARAM);
+    }
+
+    boolean nextIsParam() {
+        return peekahead().type == PrinterGCodeToken.X_PM || peekahead().type == PrinterGCodeToken.Y_PM ||
+            peekahead().type == PrinterGCodeToken.Z_PM || peekahead().type == PrinterGCodeToken.R_PM ||
+            peekahead().type == PrinterGCodeToken.I_PM || peekahead().type == PrinterGCodeToken.Z_PM ||
+            peekahead().type == PrinterGCodeToken.PARAM;
     }
 }

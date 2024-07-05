@@ -17,6 +17,7 @@ abstract class ConsumerModule<T> {
 
     void parseTokens() {
         while(!isAtEnd()) {
+            // System.out.println("Peeking at " + peek());
             examineToken(peek());
             advance();
         }
@@ -44,6 +45,12 @@ abstract class ConsumerModule<T> {
     protected Token advance() {
         if (!isAtEnd()) current++;
         return previous();
+    }
+
+    // TODO better naming structure
+    protected Token peekahead() {
+        if (isAtEnd()) return null;
+        return tokens.get(current + 1);
     }
 
     protected boolean isAtEnd() {

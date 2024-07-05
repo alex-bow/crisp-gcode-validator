@@ -82,9 +82,11 @@ class LazyParser {
         String nextLineStr;
 
         for (lineNum = 1; scanner.hasNextLine(); lineNum++) {
+            System.out.println("ln " + lineNum);
             isNewLine = true;
             nextLineStr = scanner.nextLine().trim();
             if (!nextLineStr.isEmpty()) {
+                System.out.println("Submitting line " + lineNum + " with content " + nextLineStr);
                 tokenizeLine(nextLineStr, lineNum);
             }
         }
@@ -147,6 +149,7 @@ class LazyParser {
     }
 
     public void addToken(Token token) {
+        System.out.println("Adding " + token);
         tokens.add(token);
     }
 
