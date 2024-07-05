@@ -36,6 +36,12 @@ class Vector3D {
         return new Coord3D(start.x + dx() / 2, start.y + dy() / 2, start.z + dz() / 2);
     }
 
+    // public Vector3D scale(double factor) {
+    //     Coord3D scaledStart = new Coord3D(start.x * factor, start.y * factor, start.z * factor);
+    //     Coord3D scaledEnd = new Coord3D(end.x * factor, end.y * factor, end.z * factor);
+    //     return new Vector3D(scaledStart, scaledEnd);
+    // }
+
     public String toString() {
         return "<" + dx() + ", " + dy() + ", " + dz() + ">";
     }

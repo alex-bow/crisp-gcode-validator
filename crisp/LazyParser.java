@@ -62,6 +62,16 @@ class LazyParser {
         return null;
     }
 
+    // TEMP
+    ToolPathConsumer tpc() {
+        for (ConsumerModule c : consumerModules) {
+            if (c.getClass() == ToolPathConsumer.class) {
+                return (ToolPathConsumer) c;
+            }
+        }
+        return null;
+    }
+
     void handleLineError(int ln, String line, GCodeError error) {
         System.out.println("Error at line " + ln + ": " + error);
         System.out.println(line);

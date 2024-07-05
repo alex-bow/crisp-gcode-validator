@@ -13,6 +13,7 @@ import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.geometry.Point3D;
 import java.lang.Math;
+import java.util.List;
 
 // TODO: Convert to javafx.Point3D?
 public class ToolPathViewer extends Application {
@@ -29,19 +30,37 @@ public class ToolPathViewer extends Application {
     public void start(Stage stage) {
         Group root = new Group();
 
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, 1600, 900);
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
-        camera.setTranslateZ(-20);
+        camera.setTranslateZ(-700);
         scene.setCamera(camera);
 
         stage.setScene(scene);
 
-        Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(1.0, 1.0, 1.0));
-        Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(2.0, 3.0, 0.0));
-
-        renderVector(root, a);
-        renderVector(root, b);
+        // double factor = 1;
+        //
+        // int i = 0;
+        // for (List<Vector3D> lr : parser.tpc().toolPath.values()) {
+        //     for (Vector3D v : lr) {
+        //         if (i < 10) {
+        //             if (v.scale(factor).length() > 1) {
+        //                 System.out.println("Placing a vector from" + v.scale(factor).start + " to " + v.scale(factor).end);
+        //                 System.out.println("It has the dimensions " + v.scale(factor) + " for the length " + v.scale(factor).length());
+        //                 renderVector(root, v.scale(factor));
+        //                 //i += 1;
+        //             }
+        //         } else {
+        //             break;
+        //         }
+        //     }
+        // }
+        //
+        // Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(1.0, 1.0, 1.0));
+        // Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(2.0, 3.0, 0.0));
+        //
+        // renderVector(root, a);
+        // renderVector(root, b);
 
         stage.setTitle("G-Code Viewer Demo ");
         stage.show();

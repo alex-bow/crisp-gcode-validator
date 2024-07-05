@@ -75,7 +75,9 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                         toolPath.put(zKey, layer);
                     }
                 }
-                layer.add(new Vector3D(start, current));
+                Vector3D path = new Vector3D(start, current);
+                // System.out.println("Moving from " + start + " to " + current);
+                layer.add(path);
             }
         }
         System.out.println("There are " + toolPath.size() + " layers in the toolpath.");
