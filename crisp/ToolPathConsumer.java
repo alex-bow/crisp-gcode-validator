@@ -26,7 +26,7 @@ class ToolPathConsumer extends ConsumerModule<List<GCodeCommand>> {
                     advance();
                 }
                 data.add(cmd);
-                // System.out.println(cmd);
+                System.out.println(cmd);
             }
         }
     }

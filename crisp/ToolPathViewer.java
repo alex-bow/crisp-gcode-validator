@@ -33,7 +33,7 @@ public class ToolPathViewer extends Application {
         Scene scene = new Scene(root, 1600, 900);
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
-        camera.setTranslateZ(-700);
+        camera.setTranslateZ(-20);
         scene.setCamera(camera);
 
         stage.setScene(scene);
