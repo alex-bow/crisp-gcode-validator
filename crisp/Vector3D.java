@@ -11,7 +11,19 @@ class Vector3D {
         this.end = end;
     }
 
-    double length() {
+    public double dx() {
+        return end.x - start.x;
+    }
+
+    public double dy() {
+        return end.x - start.x;
+    }
+
+    public double dz() {
+        return end.z - start.z;
+    }
+
+    public double length() {
         return Math.sqrt(Math.pow(start.x + end.x, 2) + Math.pow(start.y + end.y, 2) +
             Math.pow(start.z + end.z, 2));
     }

@@ -11,6 +11,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import java.lang.Math;
 
 public class ToolPathViewer extends Application {
 
@@ -32,12 +33,31 @@ public class ToolPathViewer extends Application {
         camera.setTranslateZ(-20);
         scene.setCamera(camera);
 
+        renderVector(root, new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(10.0, 0.0, 0.0)));
+
         stage.setScene(scene);
-        stage.setTitle("G-Code Viewer Demo");
+
+        Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(10.0, 0.0, 0.0));
+        Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(0.0, 10.0, 0.0));
+
+        stage.setTitle("G-Code Viewer Demo " + angleBetweenVectors(a, b));
         stage.show();
     }
 
     void displayToolPath(String[] args) {
         launch(args);
     }
+
+    private void renderVector(Group parent, Vector3D vector) {
+        Cylinder cylinder = new Cylinder(VECTOR_RADIUS, vector.length());
+
+
+        parent.getChildren().addAll(cylinder);
+    }
+
+    private double angleBetweenVectors(Vector3D a, Vector3D b) {
+        double dotProduct = a.dx() * b.dx() + a.dy() * b.dy() + a.dz() * b.dz();
+        return Math.toDegrees(Math.acos(dotProduct/(a.length() * b.length())));
+    }
+
 }
