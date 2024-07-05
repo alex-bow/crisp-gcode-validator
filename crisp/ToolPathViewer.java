@@ -21,16 +21,16 @@ public class ToolPathViewer extends Application {
     static LazyParser parser;
     private static double VECTOR_RADIUS = 0.03;
 
-    static int zoom = -30;
+    //static int zoom = -30;
 
     // Probably not structurally optimal
     public static void addParser(LazyParser p) {
         parser = p;
     }
 
-    public static void setZoom(int z) {
-        zoom = z;
-    }
+    // public static void setZoom(int z) {
+    //     zoom = z;
+    // }
 
     @Override
     public void start(Stage stage) {
@@ -38,27 +38,17 @@ public class ToolPathViewer extends Application {
 
         Scene scene = new Scene(root, 1600, 900);
 
-        // This camera by default is small. <6, 6, 6> ray originating from origin gets close
-        // to window bounds
-
-        PerspectiveCamera camera = new PerspectiveCamera(true);
-        // TODO Customizing zoom might be a way to constrain large prints to be visible in view
-        // Possibly cannot translate beyond -100
-        camera.setTranslateZ(zoom);
-        camera.setTranslateX(75);
-        camera.setTranslateY(5);
-        scene.setCamera(camera);
-
-        stage.setScene(scene);
-
-        double factor = 1;
-
+        // Display toolpath
+        double longest = 0.0;
         int i = 0;
         for (List<Vector3D> lr : parser.tpc().toolPath.values()) {
             for (Vector3D v : lr) {
                 System.out.println("This layer contains " + lr.size() + " vectors");
                 System.out.println("Placing a vector from" + v.start + " to " + v.end);
                 System.out.println("It has the dimensions " + v + " for the length " + v.length());
+                if (v.length() > longest) {
+                    longest = v.length();
+                }
                 renderVector(root, v);
             }
         }
@@ -69,7 +59,22 @@ public class ToolPathViewer extends Application {
         renderVector(root, a);
         // renderVector(root, b);
 
-        stage.setTitle("G-Code Viewer Demo ");
+        // This camera by default is small. <6, 6, 6> ray originating from origin gets close
+        // to window bounds
+
+        PerspectiveCamera camera = new PerspectiveCamera(true);
+        // TODO Customizing zoom might be a way to constrain large prints to be visible in view
+        // Possibly cannot translate beyond -100
+        System.out.println("Trying to zoom to " + (-20 - longest * 0.2));
+        camera.setTranslateZ(-20 - longest * 0.2);
+
+        //camera.setTranslateX(75);
+        camera.setTranslateY(5);
+        scene.setCamera(camera);
+
+        stage.setScene(scene);
+
+        stage.setTitle("G-Code Viewer Demo - size " + longest);
         stage.show();
     }
 
