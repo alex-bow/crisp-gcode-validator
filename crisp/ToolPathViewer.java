@@ -38,23 +38,24 @@ public class ToolPathViewer extends Application {
 
         stage.setScene(scene);
 
-        // double factor = 1;
-        //
-        // int i = 0;
-        // for (List<Vector3D> lr : parser.tpc().toolPath.values()) {
-        //     for (Vector3D v : lr) {
-        //         if (i < 10) {
-        //             if (v.scale(factor).length() > 1) {
-        //                 System.out.println("Placing a vector from" + v.scale(factor).start + " to " + v.scale(factor).end);
-        //                 System.out.println("It has the dimensions " + v.scale(factor) + " for the length " + v.scale(factor).length());
-        //                 renderVector(root, v.scale(factor));
-        //                 //i += 1;
-        //             }
-        //         } else {
-        //             break;
-        //         }
-        //     }
-        // }
+        double factor = 1;
+
+        int i = 0;
+        for (List<Vector3D> lr : parser.tpc().toolPath.values()) {
+            for (Vector3D v : lr) {
+                if (i < 10) {
+                    System.out.println("Placing a vector from" + v.start + " to " + v.end);
+                    System.out.println("It has the dimensions " + v + " for the length " + v.length());
+                    renderVector(root, v);
+                    if (v.length() > 1) {
+
+                        //i += 1;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
         //
         // Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(1.0, 1.0, 1.0));
         // Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(2.0, 3.0, 0.0));

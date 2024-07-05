@@ -28,8 +28,8 @@ class Vector3D {
         // System.out.println(Math.pow(start.x + end.x, 2));
         // System.out.println(Math.pow(start.y + end.y, 2));
         // System.out.println(Math.pow(start.z + end.z, 2));
-        return Math.sqrt(Math.pow(start.x + end.x, 2) + Math.pow(start.y + end.y, 2) +
-            Math.pow(start.z + end.z, 2));
+        return Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2) +
+            Math.pow(start.z - end.z, 2));
     }
 
     public Coord3D center() {
