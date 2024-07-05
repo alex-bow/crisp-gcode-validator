@@ -37,10 +37,10 @@ public class ToolPathViewer extends Application {
         stage.setScene(scene);
 
         Vector3D a = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(1.0, 1.0, 1.0));
-        // Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(2.0, 3.0, 0.0));
+        Vector3D b = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(2.0, 3.0, 0.0));
 
         renderVector(root, a);
-        // renderVector(root, b);
+        renderVector(root, b);
 
         stage.setTitle("G-Code Viewer Demo ");
         stage.show();
@@ -52,6 +52,8 @@ public class ToolPathViewer extends Application {
 
     private void renderVector(Group parent, Vector3D vector) {
         Cylinder cylinder = new Cylinder(VECTOR_RADIUS, vector.length());
+        Cylinder prot = new Cylinder(VECTOR_RADIUS, vector.length());
+        parent.getChildren().addAll(prot);
 
         System.out.println(vector.length() + " long");
 
@@ -70,12 +72,15 @@ public class ToolPathViewer extends Application {
         double rotZ = rot(vector.dx(), cylinderPos.dx(), vector.dy(), cylinderPos.dy());
 
 
-        cylinder.getTransforms().add(new Rotate(rotX, 0.0, vector.dy(), vector.dz()));
-        cylinder.getTransforms().add(new Rotate(rotY, vector.dx(), 0.0, vector.dz()));
-        cylinder.getTransforms().add(new Rotate(rotZ, vector.dx(), vector.dy(), 0.0));
+        // Seemingly related to centering + java coordinate system
+
+        cylinder.getTransforms().add(new Rotate(-rotX / 2, 0.0, vector.dy(), vector.dz()));
+        cylinder.getTransforms().add(new Rotate(-rotY / 2, vector.dx(), 0.0, vector.dz()));
+        cylinder.getTransforms().add(new Rotate(-rotZ / 2, vector.dx(), vector.dy(), 0.0));
+
         cylinder.getTransforms().add(new Translate(vector.center().x, vector.center().y, vector.center().z));
 
-        System.out.println(rotX + " " + rotY + " " + rotZ);
+        // System.out.println(rotX + " " + rotY + " " + rotZ);
         // cylinder.getTransforms().add(new Rotate(Math.random()*180.0 - 90.0));
 
         parent.getChildren().addAll(cylinder);
@@ -83,9 +88,10 @@ public class ToolPathViewer extends Application {
 
     private double angleBetweenVectors(Vector3D a, Vector3D b) {
         double dotProduct = a.dx() * b.dx() + a.dy() * b.dy() + a.dz() * b.dz();
-        System.out.println("Finding " + dotProduct);
-        System.out.println("Over " + (a.length() * b.length()));
+        // System.out.println("Finding " + dotProduct);
+        // System.out.println("Over " + (a.length() * b.length()));
         if (a.length() == 0.0 || b.length() == 0.0) {
+            System.out.println("Found a zero vector!!");
             return 0.0;
         }
         System.out.println("The result is " + Math.acos(dotProduct/(a.length() * b.length())));
@@ -101,6 +107,7 @@ public class ToolPathViewer extends Application {
         // We'll always pretend we're projecting vectors onto the xy plane
         // it isn't directly relevant, we just need the angle between them in a projection
         // treating them as if they were 2D
+        System.out.println("Getting the rot() for " + dia + ", " + dja + " and " + dib + ", " + djb);
         Vector3D projectionA = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(dia, dja, 0.0));
         Vector3D projectionB = new Vector3D(new Coord3D(0.0, 0.0, 0.0), new Coord3D(dib, djb, 0.0));
         System.out.println(projectionA + " -> " + projectionB);
