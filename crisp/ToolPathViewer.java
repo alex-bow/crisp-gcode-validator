@@ -51,46 +51,67 @@ public class ToolPathViewer extends Application {
         launch(args);
     }
 
+    // With credit for math to Rahel Luthy, https://netzwerg.ch/blog/2015/03/22/javafx-3d-line/.
+    // This combines homebrew Coord3D and JavaFX Point3D in an inelegant way,
+    // TODO resolve somehow.
     private void renderVector(Group parent, Vector3D vector) {
         Cylinder cylinder = new Cylinder(VECTOR_RADIUS, vector.length());
-        Cylinder prot = new Cylinder(VECTOR_RADIUS, vector.length());
-        parent.getChildren().addAll(prot);
 
-        System.out.println(vector.length() + " long");
-
-        // Cylinder is by default centered - not ending - at the origin
-        Vector3D cylinderPos = new Vector3D(new Coord3D(0.0, 0.0, 0.0),
-            new Coord3D(0.0, vector.length(), 0.0));
-        // double rot = angleBetweenVectors(vector, cylinderPos);
-        Coord3D end = new Coord3D(0.0, vector.length(), 0.0);
-        //System.out.println(end);
-        //System.out.println(cylinderPos);
-
+        // move to midpoint
         Coord3D center = vector.center();
-        System.out.println("I think the center of " + vector + " is " + center + "!");
         cylinder.getTransforms().add(new Translate(center.x, center.y, center.z));
 
-        double rotX = rot(vector.dy(), cylinderPos.dy(), vector.dz(), cylinderPos.dz());
-        //System.out.println("rotX between " + vector + " and " + cylinderPos + " is " + rotX);
-        double rotY = rot(vector.dx(), cylinderPos.dx(), vector.dz(), cylinderPos.dz());
-        //System.out.println("rotY between " + vector + " and " + cylinderPos + " is " + rotY);
-        double rotZ = rot(vector.dx(), cylinderPos.dx(), vector.dy(), cylinderPos.dy());
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D diff = new Point3D(vector.dx(), vector.dy(), vector.dz());
 
-
-        // // Seemingly related to centering + java coordinate system
-        // cylinder.getTransforms().add(new Rotate(-rotX / 2, 0.0, vector.dy(), vector.dz()));
-        // cylinder.getTransforms().add(new Rotate(-rotY / 2, vector.dx(), 0.0, vector.dz()));
-        // cylinder.getTransforms().add(new Rotate(-rotZ / 2, vector.dx(), vector.dy(), 0.0));
-
-        cylinder.getTransforms().add(new Rotate(-rotX, new Point3D(0.0, 1.0, 1.0)));
-        cylinder.getTransforms().add(new Rotate(-rotY, new Point3D(1.0, 0.0, 1.0)));
-        cylinder.getTransforms().add(new Rotate(-rotZ, new Point3D(1.0, 1.0, 0.0)));
-
-        // System.out.println(rotX + " " + rotY + " " + rotZ);
-        // cylinder.getTransforms().add(new Rotate(Math.random()*180.0 - 90.0));
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
+        cylinder.getTransforms().add(rotateAroundCenter);
 
         parent.getChildren().addAll(cylinder);
     }
+
+    // private void renderVector(Group parent, Vector3D vector) {
+    //     Cylinder cylinder = new Cylinder(VECTOR_RADIUS, vector.length());
+    //     Cylinder prot = new Cylinder(VECTOR_RADIUS, vector.length()); // prototype
+    //     parent.getChildren().addAll(prot); // compare to the baseline
+    //
+    //     System.out.println(vector.length() + " long");
+    //
+    //     // Cylinder is by default centered - not ending - at the origin
+    //     Vector3D cylinderPos = new Vector3D(new Coord3D(0.0, 0.0, 0.0),
+    //         new Coord3D(0.0, vector.length(), 0.0));
+    //     // double rot = angleBetweenVectors(vector, cylinderPos);
+    //     Coord3D end = new Coord3D(0.0, vector.length(), 0.0);
+    //     //System.out.println(end);
+    //     //System.out.println(cylinderPos);
+    //
+    //     Coord3D center = vector.center();
+    //     System.out.println("I think the center of " + vector + " is " + center + "!");
+    //     cylinder.getTransforms().add(new Translate(center.x, center.y, center.z));
+    //
+    //     double rotX = rot(vector.dy(), cylinderPos.dy(), vector.dz(), cylinderPos.dz());
+    //     //System.out.println("rotX between " + vector + " and " + cylinderPos + " is " + rotX);
+    //     double rotY = rot(vector.dx(), cylinderPos.dx(), vector.dz(), cylinderPos.dz());
+    //     //System.out.println("rotY between " + vector + " and " + cylinderPos + " is " + rotY);
+    //     double rotZ = rot(vector.dx(), cylinderPos.dx(), vector.dy(), cylinderPos.dy());
+    //
+    //
+    //     // // Seemingly related to centering + java coordinate system
+    //     // cylinder.getTransforms().add(new Rotate(-rotX / 2, 0.0, vector.dy(), vector.dz()));
+    //     // cylinder.getTransforms().add(new Rotate(-rotY / 2, vector.dx(), 0.0, vector.dz()));
+    //     // cylinder.getTransforms().add(new Rotate(-rotZ / 2, vector.dx(), vector.dy(), 0.0));
+    //
+    //     cylinder.getTransforms().add(new Rotate(-rotX, new Point3D(0.0, 1.0, 1.0)));
+    //     cylinder.getTransforms().add(new Rotate(-rotY, new Point3D(1.0, 0.0, 1.0)));
+    //     cylinder.getTransforms().add(new Rotate(-rotZ, new Point3D(1.0, 1.0, 0.0)));
+    //
+    //     // System.out.println(rotX + " " + rotY + " " + rotZ);
+    //     // cylinder.getTransforms().add(new Rotate(Math.random()*180.0 - 90.0));
+    //
+    //     parent.getChildren().addAll(cylinder);
+    // }
 
     private double angleBetweenVectors(Vector3D a, Vector3D b) {
         double dotProduct = a.dx() * b.dx() + a.dy() * b.dy() + a.dz() * b.dz();
