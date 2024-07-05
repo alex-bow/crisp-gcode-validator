@@ -65,20 +65,19 @@ public class ToolPathViewer extends Application {
         //System.out.println(end);
         //System.out.println(cylinderPos);
 
+        cylinder.getTransforms().add(new Translate(vector.center().x, vector.center().y, vector.center().z));
+
         double rotX = rot(vector.dy(), cylinderPos.dy(), vector.dz(), cylinderPos.dz());
         //System.out.println("rotX between " + vector + " and " + cylinderPos + " is " + rotX);
         double rotY = rot(vector.dx(), cylinderPos.dx(), vector.dz(), cylinderPos.dz());
-        System.out.println("rotY between " + vector + " and " + cylinderPos + " is " + rotY);
+        //System.out.println("rotY between " + vector + " and " + cylinderPos + " is " + rotY);
         double rotZ = rot(vector.dx(), cylinderPos.dx(), vector.dy(), cylinderPos.dy());
 
 
         // Seemingly related to centering + java coordinate system
-
         cylinder.getTransforms().add(new Rotate(-rotX / 2, 0.0, vector.dy(), vector.dz()));
         cylinder.getTransforms().add(new Rotate(-rotY / 2, vector.dx(), 0.0, vector.dz()));
         cylinder.getTransforms().add(new Rotate(-rotZ / 2, vector.dx(), vector.dy(), 0.0));
-
-        cylinder.getTransforms().add(new Translate(vector.center().x, vector.center().y, vector.center().z));
 
         // System.out.println(rotX + " " + rotY + " " + rotZ);
         // cylinder.getTransforms().add(new Rotate(Math.random()*180.0 - 90.0));
