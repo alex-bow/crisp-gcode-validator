@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.geometry.Point3D;
 import java.lang.Math;
 
+// TODO: Convert to javafx.Point3D?
 public class ToolPathViewer extends Application {
 
     static LazyParser parser;
@@ -65,7 +66,9 @@ public class ToolPathViewer extends Application {
         //System.out.println(end);
         //System.out.println(cylinderPos);
 
-        cylinder.getTransforms().add(new Translate(vector.center().x, vector.center().y, vector.center().z));
+        Coord3D center = vector.center();
+        System.out.println("I think the center of " + vector + " is " + center + "!");
+        cylinder.getTransforms().add(new Translate(center.x, center.y, center.z));
 
         double rotX = rot(vector.dy(), cylinderPos.dy(), vector.dz(), cylinderPos.dz());
         //System.out.println("rotX between " + vector + " and " + cylinderPos + " is " + rotX);
@@ -74,10 +77,14 @@ public class ToolPathViewer extends Application {
         double rotZ = rot(vector.dx(), cylinderPos.dx(), vector.dy(), cylinderPos.dy());
 
 
-        // Seemingly related to centering + java coordinate system
-        cylinder.getTransforms().add(new Rotate(-rotX / 2, 0.0, vector.dy(), vector.dz()));
-        cylinder.getTransforms().add(new Rotate(-rotY / 2, vector.dx(), 0.0, vector.dz()));
-        cylinder.getTransforms().add(new Rotate(-rotZ / 2, vector.dx(), vector.dy(), 0.0));
+        // // Seemingly related to centering + java coordinate system
+        // cylinder.getTransforms().add(new Rotate(-rotX / 2, 0.0, vector.dy(), vector.dz()));
+        // cylinder.getTransforms().add(new Rotate(-rotY / 2, vector.dx(), 0.0, vector.dz()));
+        // cylinder.getTransforms().add(new Rotate(-rotZ / 2, vector.dx(), vector.dy(), 0.0));
+
+        cylinder.getTransforms().add(new Rotate(-rotX, new Point3D(0.0, 1.0, 1.0)));
+        cylinder.getTransforms().add(new Rotate(-rotY, new Point3D(1.0, 0.0, 1.0)));
+        cylinder.getTransforms().add(new Rotate(-rotZ, new Point3D(1.0, 1.0, 0.0)));
 
         // System.out.println(rotX + " " + rotY + " " + rotZ);
         // cylinder.getTransforms().add(new Rotate(Math.random()*180.0 - 90.0));
